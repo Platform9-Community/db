@@ -71,6 +71,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: mysql57
+  namespace: mysql57
   labels:
     app: mysql57
     db: mysql57
