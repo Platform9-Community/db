@@ -1,0 +1,103 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: mysql57
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql57-pv
+spec:
+  storageClassName: mysql57
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: /opt/mysql57-store
+    type: DirectoryOrCreate
+  claimRef:
+    namespace: mysql57
+    name: mysql57-pvc
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: mysql57
+          operator: Exists
+          values:
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql57-pvc
+  namespace: mysql57
+spec:
+  storageClassName: mysql57
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql57
+  labels:
+    app: mysql57
+    db: mysql57
+spec:
+  ports:
+    - port: 3306
+      name: mysql57
+  selector:
+    app: mysql57
+    db: mysql57
+  clusterIP: None
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql57
+  labels:
+    app: mysql57
+    db: mysql57
+spec:
+  selector:
+    matchLabels:
+      app: mysql57
+      db: mysql57
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: mysql57
+        db: mysql57
+    spec:
+      containers:
+      - image: mysql:5.7
+        name: mysql57
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass
+              key: password
+        livenessProbe:
+          tcpSocket:
+            port: 3306
+        ports:
+        - containerPort: 3306
+          name: mysql57
+        volumeMounts:
+        - name: mysql-pvc
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-pvc
+        persistentVolumeClaim:
+          claimName: mysql57-pvc
+...
