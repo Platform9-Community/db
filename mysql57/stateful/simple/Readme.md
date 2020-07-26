@@ -146,7 +146,7 @@ pod "mysql-client" deleted
 
 The client pod will get deleted as soon the user quits the mysql client.
 
-Cleanup:
+## Cleanup
 Simply run following command to delete everything.
 ```bash
 $ kubectl delete -f deploy.yaml
