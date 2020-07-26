@@ -27,7 +27,7 @@ $ git clone https://github.com/KoolKubernetes/db.git
 Apply deploy.yaml on your cluster
 
 ```bash
-cd db/mysql57/stateful/simple ; kubectl apply -f deploy.taml
+cd db/mysql57/stateful/simple ; kubectl apply -f deploy.yaml
 ```
 
 Track deployment status
@@ -37,7 +37,7 @@ kubectl get pods -n mysql57 -w
 
 Deployment is successful as soon as mysql57 pod progresses into 'Running' state. Deployment also creates a headless service to provide access to the db.
 ```bash
-$ kubectl get all,svc -n mysql57
+$ kubectl get all,svc,pvc -n mysql57
 NAME                           READY   STATUS    RESTARTS   AGE
 pod/mysql-client               1/1     Running   0          20m
 pod/mysql57-7cdfc9f78f-xvvx7   1/1     Running   1          52m
@@ -50,6 +50,9 @@ deployment.apps/mysql57   1/1     1            1           53m
 
 NAME                                 DESIRED   CURRENT   READY   AGE
 replicaset.apps/mysql57-7cdfc9f78f   1         1         1       53m
+
+NAME                                STATUS   VOLUME       CAPACITY   ACCESS MODES   STORAGECLASS   AGE
+persistentvolumeclaim/mysql57-pvc   Bound    mysql57-pv   10Gi       RWO            mysql57        53m
 ```
 
 Allow access to the DB from external IP addresses. First login to the pod. Run mysql after landing into the pod.
