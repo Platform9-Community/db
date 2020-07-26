@@ -4,31 +4,38 @@
 Here we are going to deploy Mysql 5.7 database server on top of Platform9 Managed kubernetes 4.4. The deployment will be backed by a persistent volume of the type hostPath.
 
 ## Configuration
-Before deploying the yaml file label one node with 'mysql57' as key so that mpersistent volume gets created and the mysql pod gets scheduled only on this node.
+Before deploying the yaml file label one node with 'mysql57' as key so that mysql pod gets scheduled only on this node. This is managed through nodeAffinity in PV properties.
 
 Select the node with enough resources for mysql to run on to label it in the following manner. 
 
 ```bash
-$ kubectl label nodes <node-name> mysql57=allow
+$ kubectl get nodes
+NAME            STATUS   ROLES    AGE     VERSION
+10.128.233.18   Ready    master   7h11m   v1.17.6
+10.128.233.25   Ready    master   7h11m   v1.17.6
+10.128.233.26   Ready    worker   7h6m    v1.17.6
+10.128.233.42   Ready    worker   7h6m    v1.17.6
+10.128.233.47   Ready    master   7h11m   v1.17.6
+10.128.233.71   Ready    worker   4h47m   v1.17.6
+$ kubectl label nodes 10.128.233.42 mysql57=allow
 ```
-Clone the KoolKubernetes repository to deploy json manifests on the cluster.
+Clone the KoolKubernetes db repository.
 
 ```bash
 $ git clone https://github.com/KoolKubernetes/db.git
 ```
-Apply the deploy.yaml on your cluster
+Apply deploy.yaml on your cluster
 
 ```bash
-cd db/mysql57/stateful/simple
-kubectl apply -f deploy.taml
+cd db/mysql57/stateful/simple ; kubectl apply -f deploy.taml
 ```
 
-Track the deploymnt status
+Track deployment status
 ```bash
 kubectl get pods -n mysql57 -w
 ```
 
-The deployment is successful as soon as mysql57 pod progresses into Running state. Deployment also creates a headless service to access the db.
+Deployment is successful as soon as mysql57 pod progresses into 'Running' state. Deployment also creates a headless service to provide access to the db.
 ```bash
 $ kubectl get all,svc -n mysql57
 NAME                           READY   STATUS    RESTARTS   AGE
@@ -78,9 +85,9 @@ mysql> exit;
 Bye
 ```
 
-Test connection via a temporary pod:
+Test connection through another pod created from same mysql image:
 ```bash
-$ kubectl run -it --rm --image=mysql:5.6 --restart=Never mysql-client -n mysql57 -- mysql -h mysql57 -prubberchicken
+$ kubectl run -it --rm --image=mysql:5.7 --restart=Never mysql-client -n mysql57 -- mysql -h mysql57 -prubberchicken
 mysql> use mysql
 Reading table information for completion of table and column names
 You can turn off this feature to get a quicker startup with -A
