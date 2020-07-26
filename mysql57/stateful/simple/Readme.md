@@ -87,8 +87,13 @@ mysql>  SELECT host FROM mysql.user WHERE User = 'root';
 mysql> exit;
 Bye
 ```
+Exit from the pod
+```bash
+root@mysql57-7cdfc9f78f-xvvx7:/# exit
+```
 
-Test connection through another pod created from same mysql image:
+Test connection through another pod created from same mysql image. Press enter if you do not get mysql prompt after running the command.
+
 ```bash
 $ kubectl run -it --rm --image=mysql:5.7 --restart=Never mysql-client -n mysql57 -- mysql -h mysql57 -prubberchicken
 mysql> use mysql
