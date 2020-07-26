@@ -1,8 +1,5 @@
 <h1 align="center">Welcome to KoolKubernetes Databases 👋</h1>
 <p>
-  <a href="https://www.npmjs.com/package/cicd" target="_blank">
-    <img alt="Version" src="https://img.shields.io/npm/v/cicd.svg">
-  </a>
   <a href="https://twitter.com/platform9sys" target="_blank">
     <img alt="Twitter: platform9sys" src="https://img.shields.io/twitter/follow/platform9sys.svg?style=social" />
   </a>
