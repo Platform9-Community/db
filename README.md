@@ -6,6 +6,3 @@ This is a collection of Kubernetes databases yaml files that are tested to work 
 
 Give a ⭐️ if this project helped you!
 
-***
-
-
