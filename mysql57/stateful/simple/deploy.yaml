@@ -6,7 +6,7 @@ metadata:
 ---
 apiVersion: v1
 data:
-  password: cnViYmVyY2hpY2tlbg==
+  password: c2VjcmV0Zm9ybXlzcWwK
 kind: Secret
 metadata:
   name: mysql-pass

@@ -95,7 +95,7 @@ root@mysql57-7cdfc9f78f-xvvx7:/# exit
 Test connection through another pod created from same mysql image. Press enter if you do not get mysql prompt after running the command.
 
 ```bash
-$ kubectl run -it --rm --image=mysql:5.7 --restart=Never mysql-client -n mysql57 -- mysql -h mysql57 -prubberchicken
+$ kubectl run -it --rm --image=mysql:5.7 --restart=Never mysql-client -n mysql57 -- mysql -h mysql57 -psecretformysql
 mysql> use mysql
 Reading table information for completion of table and column names
 You can turn off this feature to get a quicker startup with -A
