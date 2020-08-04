@@ -1,7 +1,7 @@
 # Simple stateful Mysql DB deployment on Platform9 Managed Kubernetes Freedom Plan
 
 
-Here we are going to deploy Mysql 5.7 database server on top of Platform9 Managed kubernetes 4.4. The deployment will be backed by a persistent volume of the type 'hostPath'. [Rook](https://github.com/KoolKubernetes/csi/tree/master/rook/) from our Koolkubernetes can also be used as persistent storage CSI backend.  Slight changes in pv and pvc definition portions of MySQL deployment manifest will be needed to use it with Rook.
+Here we are going to deploy Mysql 5.7 database server on top of Platform9 Managed kubernetes 4.4. The deployment will be backed by a persistent volume of the type 'hostPath'. [Rook](https://github.com/KoolKubernetes/csi/tree/master/rook/) can also be used as persistent storage CSI backend.  Slight changes in pv and pvc definition portions of MySQL deployment manifest will be needed to use it with Rook.
 
 ## Configuration
 Before deploying the yaml file label one node with 'mysql57' as key so that mysql pod gets scheduled only on this node. This is managed through nodeAffinity in PV properties.
