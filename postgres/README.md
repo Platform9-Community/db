@@ -5,10 +5,16 @@ verified on a PMK/PMKFT cluster but should be valid for any Kubernetes cluster. 
 we will be using a hostPath volume but you can choose any storageClass you have deployed in the cluster.
 
 ## Prerequisites
-1.  Working Kubernetes cluster with access to kubeconfig.
+1.  Working Kubernetes cluster 1.16+  with access to kubeconfig.
 2.  Access to one of the nodes so we can access the postgres service using a NodePort type.
+3. Helm 2.12+ or Helm 3.0-beta3+ (for HA deployment only)
 
 ## Deployment Steps
+
+
+### Deploying for testing/Stage/Dev Environment
+
+**NOTE**: This section is for those who want to try PostGres for testing/Stage/Dev environment and deploys PostGres as a deployment object and not as a Statefulset. The storageClass assumed in this section is hostPath which stores the data on the node's local disk. If the node crashes, the postgres data on the node will not be recoverable.
 
 1. Clone the KoolKubernetes db repository.
 ```bash
@@ -82,10 +88,55 @@ postgresdb=#
 ```
 
 
-## Cleanup
+### Cleanup dev/test/staging postgres setup
 
 Run the following command to cleanup the created Kubernetes objects -
 
 ```bash
 $ kubectl delete -f deploy.yaml
+```
+
+### Deploying PostGres in HA setup
+**NOTE**: This section is for those who want to deploy Postgres in an HA setup where loss of one PostGres pod doesn't result in a  data loss. Please note that you need a StorageClass that provides Shared Storage, Replication and redundancy. This guide   is using [Rook](https://github.com/KoolKubernetes/csi/tree/master/rook/internal-ceph) and we'll be using StatefulSet instead of a deployment object in the earlier section.
+
+
+1.  This tutorial assumes you have Helm [installed](https://helm.sh/docs/intro/install/) from where you can access the Kubernetes cluster.
+
+2. Ensure that the default storageClass is set to SharedStorage,Replicated and Redundant or you can specify it while deploying Helm chart.
+You can do it by passing the parameter --set global.storageClass=<storageClassName>
+
+3. Deploy the Helm chart by running the command -
+```bash
+helm repo add bitnami https://charts.bitnami.com/bitnami
+helm install postgresql-ha bitnami/postgresql-ha
+```
+
+(NOTE: you can pass additional values  referred [here](https://github.com/bitnami/charts/tree/master/bitnami/postgresql-ha/#installing-the-chart) if needed)
+
+4. You should be able to observe 2 replicas by default one is the master and the second is standby.
+
+```bash
+kubectl get pods
+NAME                                               READY   STATUS    RESTARTS   AGE
+my-release-postgresql-ha-pgpool-768898c659-xlrqn   1/1     Running   0          156m
+my-release-postgresql-ha-postgresql-0              1/1     Running   1          147m
+my-release-postgresql-ha-postgresql-1              1/1     Running   0          155m
+```
+
+5. Checking the logs on the master pod,here's what you can observe -
+
+```bash
+[2020-08-20 08:16:02] [NOTICE] starting monitoring of node "my-release-postgresql-ha-postgresql-2" (ID: 1001)
+```
+On the standby pod, you can observe the logs as mentioned below
+
+```bash
+[2020-08-20 08:14:46] [NOTICE] monitoring cluster primary "my-release-postgresql-ha-postgresql-1" (ID: 1000)
+[2020-08-20 08:14:52] [NOTICE] new standby "my-release-postgresql-ha-postgresql-2" (ID: 1001) has connected
+```
+
+### Cleanup the HA Postgres setup
+
+```bash
+helm delete  postgresql-ha
 ```
