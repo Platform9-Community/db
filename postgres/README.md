@@ -1,6 +1,6 @@
 # PostGres deployment on Platform9 Managed Kubernetes/Platform9 Managed Kubernetes Free Tier
 
-This post will demonstrate how to deploy Postgres database on a Kubernetes cluster. It has bee
+This post will demonstrate how to deploy Postgres database on a Kubernetes cluster. It has been
 verified on a PMK/PMKFT cluster but should be valid for any Kubernetes cluster. For the sake of simplicity,
 we will be using a hostPath volume but you can choose any storageClass you have deployed in the cluster.
 
