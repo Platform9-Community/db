@@ -2,7 +2,7 @@
 
 This post will demonstrate how to deploy Postgres database on a Kubernetes cluster. It has been
 verified on a PMK/PMKFT cluster but should be valid for any Kubernetes cluster. For the sake of simplicity,
-we will be using a hostPath volume but you can choose any storageClass you have deployed in the cluster.
+we will be using a hostPath volume but you can choose any StorageClass you have deployed in the cluster.
 
 ## Prerequisites
 1.  Working Kubernetes cluster 1.16+  with access to kubeconfig.
