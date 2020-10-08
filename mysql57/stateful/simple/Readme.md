@@ -69,7 +69,7 @@ root@mysql57-7cdfc9f78f-xvvx7:/# mysql
 Run following commands on mysql prompt.
 
 ```bash
-mysql> GRANT ALL ON *.* to root@'%' IDENTIFIED BY 'rubberchicken';
+mysql> GRANT ALL ON *.* to root@'%' IDENTIFIED BY 'secretformysql';
 Query OK, 0 rows affected, 1 warning (0.00 sec)
 
 mysql> FLUSH PRIVILEGES;
